@@ -1,4 +1,4 @@
-##Primeiro atualizar todos os pacotes e recursos da máquina
+## Primeiro atualizar todos os pacotes e recursos da máquina
 ```
 sudo apt-get update && sudo apt-get upgrade
 sudo apt-get install python3-venv
@@ -13,13 +13,17 @@ sudo apt-get install python3-venv
 `git clone your-url.git`
 
 * Instalar as dependências
+
 `pip install -r requirements.txt`
 
 * Separar os arquivos estáticos 
+
 `python manage.py collectstatic`
 
 * Criar o Banco de Dados
+
 `python manage.py migrate`
 
-* Criar usuários adm 
+* Criar usuários adm
+
 `python manage.py createsuperuser`
