@@ -132,7 +132,7 @@ chmod-socket    = 666
 ```
 sudo mkdir /etc/uwsgi
 sudo mkdir /etc/uwsgi/vassals
-sudo ln -s /home/ubuntu/ubuntu/mysite_uwsgi.ini /etc/uwsgi/vassals/
+sudo ln -s /home/ubuntu/VPS/mysite_uwsgi.ini /etc/uwsgi/vassals/
 uwsgi --emperor /etc/uwsgi/vassals --uid www-data --gid www-data
 ```
 ## Configurar o systemctl para iniciar no boot
