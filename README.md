@@ -6,7 +6,7 @@ sudo apt-get install python3-venv
 
 * Criar uma virtual env
 
-`python3 -m venv .venv`
+`python3 -m venv venv`
 
 * Clonar o repositorio
 
@@ -116,7 +116,7 @@ server {
 [uwsgi]
 chdir           = /home/ubuntu/VPS
 module          = django_vps.wsgi
-home            = /home/ubuntu/.venv
+home            = /home/ubuntu/venv
 master          = true
 processes       = 10
 socket          = /home/ubuntu/VPS/mysite.sock
@@ -170,9 +170,9 @@ sudo systemctl daemon-reload
 
 sudo systemctl enable djangovps.service
 
- sudo systemctl start djangovps.service
+sudo systemctl start djangovps.service
 
- sudo systemctl status djangovps.service
+sudo systemctl status djangovps.service
 
 journalctl -u djangovps.service
 
