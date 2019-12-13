@@ -67,3 +67,63 @@ uwsgi_param  SERVER_PORT        $server_port;
 uwsgi_param  SERVER_NAME        $server_name;
 ```
 
+* Criar arquivo de configurações do Nginx em /etc/nginx/sites-available/ exemplo: mysite.conf
+
+```
+upstream django {
+    server unix:///home/ubuntu/VPS/mysite.sock; 
+}
+
+server {
+    listen      80;
+    server_name example.com;
+    charset     utf-8;
+
+    client_max_body_size 75M; 
+
+    location /media  {
+        alias /home/ubuntu/VPS/media; 
+    }
+
+    location /static {
+        alias /home/ubuntu/VPS/static;
+    }
+
+    location / {
+        uwsgi_pass  django;
+        include     /home/ubuntu/VPS/uwsgi_params; 
+    }
+}
+```
+
+* Criar um symlink em /etc/nginx/sites-enabled
+/ exemplo: mysite.conf
+
+`sudo ln -s /etc/nginx/sites-available/djangovps.conf`
+
+* Reinicie o Nginx
+
+`sudo /etc/init.d/nginx restart`
+
+
+* Baixe uma imagem para a pasta de media e teste
+
+`uwsgi --socket mysite.sock --module django_vps.wsgi --chmod-socket=666`
+
+* Criar o arquivo de inicialização
+
+```
+[uwsgi]
+chdir           = /home/ubuntu/VPS
+module          = django_vps.wsgi
+home            = /home/ubuntu/.venv
+master          = true
+processes       = 10
+socket          = /home/ubuntu/VPS/mysite.sock
+vacuum          = true
+chmod-socket    = 666
+```
+
+* Testar o arquivo de inicialização
+
+`uwsgi --ini mysite_uwsgi.ini`
