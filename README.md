@@ -127,3 +127,53 @@ chmod-socket    = 666
 * Testar o arquivo de inicialização
 
 `uwsgi --ini mysite_uwsgi.ini`
+
+## Configurando o uWSGI em modo Emperor
+```
+sudo mkdir /etc/uwsgi
+sudo mkdir /etc/uwsgi/vassals
+sudo ln -s /home/ubuntu/ubuntu/mysite_uwsgi.ini /etc/uwsgi/vassals/
+uwsgi --emperor /etc/uwsgi/vassals --uid www-data --gid www-data
+```
+## Configurar o systemctl para iniciar no boot
+
+```
+https://uwsgi-docs.readthedocs.io/en/latest/Systemd.html
+
+cd /etc/systemd/system/
+
+sudo vim djangovps.service
+
+
+======
+[Unit]
+Description=Django VPS uWSGI Emperor
+After=syslog.target
+
+[Service]
+ExecStart=/home/ubuntu/venv/bin/uwsgi --emperor /etc/uwsgi/vassals --uid www-data --gid www-data
+RuntimeDirectory=uwsgi
+Restart=always
+KillSignal=SIGQUIT
+Type=notify
+StandardError=syslog
+NotifyAccess=all
+User=ubuntu
+
+[Install]
+WantedBy=multi-user.target
+======
+
+sudo chmod 664 /etc/systemd/system/djangovps.service
+
+sudo systemctl daemon-reload
+
+sudo systemctl enable djangovps.service
+
+ sudo systemctl start djangovps.service
+
+ sudo systemctl status djangovps.service
+
+journalctl -u djangovps.service
+
+```
