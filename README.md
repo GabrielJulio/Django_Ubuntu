@@ -177,3 +177,44 @@ sudo systemctl status djangovps.service
 journalctl -u djangovps.service
 
 ```
+
+## Configure Apache2 com Nginx como Proxy reverso
+
+* Desabilitar nginx symlink padrão para abrir a porta 80
+``` 
+cd /etc/nginx/sites-enabled/
+sudo rm -rf default
+sudo /etc/init.d/nginx restart
+```
+
+* Instalar o apache
+
+```
+sudo apt-get install apache2
+sudo a2enmod proxy
+sudo a2enmod proxy_http
+sudo a2enmod proxy_balancer
+sudo a2enmod lbmethod_byrequests
+sudo systemctl restart apache2
+```
+
+* Criar o Vhost
+
+``` 
+cd /etc/apache2/sites-available
+sudo vim django_vps.conf
+```
+
+== Conteúdo do arquivo ==
+
+```
+<VirtualHost *:80>
+    ServerName 52.16.70.162
+    ProxyPass / http://127.0.0.1:8000/
+    ProxyPassReverse / http://127.0.0.1:8000/
+</VirtualHost>
+```
+
+* Criar um symlink em sites-enable
+
+`sudo ln -s /etc/apache2/sites-available/django_vps.conf /etc/apache2/sites-enabled/`
